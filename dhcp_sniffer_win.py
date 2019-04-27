@@ -1,7 +1,8 @@
 import socket
 import argparse
+import struct
 
-from common import UDP, DHCP, IPv4, Host, PACKETS_WITHOUT_DHCP
+from common import UDP, DHCP, IPv4, Host, PACKETS_WITHOUT_DHCP, DHCP_Protocol
 from utils import convert_hex_str_to_mac, convert_hex_str_to_int_str, get_time, \
     check_port_open
 
@@ -64,12 +65,16 @@ if __name__ == '__main__':
         #         source_port != DHCP_Protocol.client_port and source_port != DHCP_Protocol.server_port) or
         #         (
         #                 dest_port != DHCP_Protocol.client_port and dest_port != DHCP_Protocol.server_port)):
-        #     continue;
+        #     continue
 
         # get DHCP
         dhcp = DHCP(packet, udp_length - 8)
         dhcp.parse_options()
-        dhcp.parse_payload()
+        try:
+            # could be errors if it happens to be not DHCP packet
+            dhcp.parse_payload()
+        except struct.error:
+            pass
         chaddr = dhcp.chaddr
         ciaddr = dhcp.ciaddr
         message_type = dhcp.option_53
