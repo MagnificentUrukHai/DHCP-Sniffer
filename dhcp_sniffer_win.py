@@ -18,15 +18,15 @@ if __name__ == '__main__':
     args = parser.parse_args()
 
     # bind raw_socket
-    host = socket.gethostbyname(socket.gethostname())
+    host_ip = socket.gethostbyname(socket.gethostname())
     sock = socket.socket(socket.AF_INET, socket.SOCK_RAW, socket.IPPROTO_IP)
-    sock.bind((host, 0))
+    sock.bind((host_ip, 0))
 
     sock.setsockopt(socket.IPPROTO_IP, socket.IP_HDRINCL, 1)
     sock.ioctl(socket.SIO_RCVALL, socket.RCVALL_ON)
 
     # print setting
-    print('listen IP: {}'.format(host))
+    print('listen IP: {}'.format(host_ip))
     if args.detail:
         print('capture type: all DHCP broadcast packets')
     else:
