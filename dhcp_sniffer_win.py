@@ -88,6 +88,9 @@ if __name__ == '__main__':
         if source_ip:
             host.set_ip(source_ip or request_ip)
 
+        if host.ip == host_ip:
+            continue
+
         host = known_hosts.setdefault(host.ip, host)
         host.increase_packet_num()
 
