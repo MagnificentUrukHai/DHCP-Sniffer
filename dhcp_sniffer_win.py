@@ -88,12 +88,10 @@ if __name__ == '__main__':
         if source_ip:
             host.set_ip(source_ip or request_ip)
 
+        host = known_hosts.setdefault(host.ip, host)
         host.increase_packet_num()
 
-        known_hosts.setdefault(host.ip, host)
-
         now = get_time()
-
 
         if args.detail:
             print("message type  : {}".format(message_type))
@@ -122,7 +120,7 @@ if __name__ == '__main__':
             if host.num_packets > PACKETS_WITHOUT_DHCP and (
                     not host.broadcasted_dhcp and not host.seen):
                 host.set_seen()
-                print("STATIC {:30}{:20}{:20}".format(now, host.mac, host.ip))
+                print("STATIC {:30}{:20}".format(now, host.ip))
             if check_port_open(host.ip, 80):
                 print('Can open browser at: http://{}'.format(
                     source_ip or host.ip))
